@@ -3,3 +3,36 @@ GET http://localhost:3000
 
 ###
 GET http://127.0.0.1:3000/api/cars
+
+###
+POST http://127.0.0.1:3000/api/cars
+Content-Type: application/json
+
+{
+    "make": "Toyota",
+    "model":  "Corolla",
+    "year": 2018,
+    "color": "Blue"
+}
+
+###
+PUT http://127.0.0.1:3000/api/cars/9
+Content-Type: application/json
+
+{
+    "make": "Dodge",
+    "model":  "Demon",
+    "year": 2020,
+    "color": "Black"
+}
+
+###
+PATCH http://localhost:3000/api/cars/10
+Content-Type: application/json
+
+{
+    "color": "Brown"
+}
+
+###
+DELETE http://localhost:3000/api/cars/10
