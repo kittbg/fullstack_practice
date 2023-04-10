@@ -2,7 +2,7 @@
 GET http://localhost:3000
 
 ###
-GET http://127.0.0.1:3000/api/cars
+GET http://127.0.0.1:3000/api/cars/1
 
 ###
 POST http://127.0.0.1:3000/api/cars
@@ -16,7 +16,7 @@ Content-Type: application/json
 }
 
 ###
-PUT http://127.0.0.1:3000/api/cars/9
+PUT http://127.0.0.1:3000/api/cars/10
 Content-Type: application/json
 
 {
@@ -27,7 +27,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3000/api/cars/10
+PATCH http://localhost:3000/api/cars/11
 Content-Type: application/json
 
 {
@@ -35,4 +35,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/api/cars/10
+DELETE http://localhost:3000/api/cars/8

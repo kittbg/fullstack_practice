@@ -12,80 +12,82 @@ const port = process.env.PORT || 3000;
 
 app.get('/api/cars', async (req, res)=>{
     try{
-        const results = await client.query('SELECT * FROM cars');
-        res.json(results.rows)
-    } catch (error){
-        console.error(error);
-        res.status(500).send('Internal Server Error')
+    let results = await client.query('SELECT * FROM cars');
+    res.json(results.rows)
+    } catch (err){
+        console.error(err);
+        res.status(500).send('Internal Server Issue.')
     }
 })
 
 app.get('/api/cars/:make', async (req, res)=>{
-   try{
-     let results = await client.query('SELECT * FROM cars WHERE make = $1', [req.params.make]);
+    let make = req.params.make
+    try{
+     let results = await client.query('SELECT * FROM cars WHERE make = $1', [make]);
      res.json(results.rows)
-   } catch (error){
-    res.status(500).send('Internal Server Error')
-   }
+    } catch (err){
+        console.error(err);
+        res.status(500).send('Internal Server Error.')
+    }
 })
 
-app.post('/api/cars', async (req, res)=>{
+app.post('/api/cars/', async (req, res)=>{
     let make = req.body.make;
     let model = req.body.model;
     let year = req.body.year;
-    let color = req.body.color;
-    try{
-        await client.query('INSERT INTO cars (make, model, year, color) VALUES ($1, $2, $3, $4)', [make, model, year, color]);
-        res.send('New car entered!')
-    } catch (error){
-        console.error(error);
-        res.status('400').send('Addition failed.')
+    let color = req.body.color
+    try {
+       await client.query('INSERT INTO cars (make, model, year, color) VALUES ($1, $2, $3, $4)', [make, model, year, color]);
+       res.send('Car added to table.')
+    } catch (err){
+        console.error(err);
+        res.status(400).send('Addition failed')
     }
 })
 
 app.put('/api/cars/:id', async (req, res)=>{
-    let make = req.body.make;
-    let model = req.body.model;
-    let year = req.body.year;
-    let color = req.body.color;
+   let make = req.body.make;
+   let model = req.body.model;
+   let year = req.body.year;
+   let color = req.body.color;
+   let id = req.params.id
     try{
-        await client.query(`UPDATE cars SET make =$1, model = $2, year = $3, color = $4 WHERE id = $5`, [make, model, year, color, req.params.id]);
-        res.send('New car entered!')
-    } catch (error){
-        console.error(error);
-        res.status('400').send('Addition failed.')
+      await client.query('UPDATE cars SET make = $1, model = $2, year = $3, color = $4 WHERE id = $5', [make, model, year, color, id]);
+      res.send('Entity successfully replaced')
+    } catch (err){
+        console.error(err);
+        res.status(400).send('Action failed.')
     }
 })
 
-app.patch('/api/cars/:id', async (req, res)=> {
-    let id = req.params.id;
+
+app.patch('/api/cars/:id', async (req, res)=>{
     let key = Object.keys(req.body)[0];
     let value = Object.values(req.body)[0];
+    let id = req.params.id
     try{
-        console.log(`Updating car with id ${id} and setting ${key} to ${value}`);
-     let results = await client.query(`UPDATE cars SET `+ key +` = $1 WHERE id = $2`, [value, id]);
-     if (results.rowCount === 0){
-        res.status(404).send(`Car with ${id} was not found.`)
-     } else {
-        res.send(results.rows)
-     }
-    } catch (error){
-        console.error(error);
-        res.status(400).send('Patch req failed.');
+      let results = await client.query(`UPDATE cars SET `+ key +` = $1 WHERE id = $2`, [value, id]);
+      if (results.rowCount === 0){
+        res.status(404).send(`Car with ${id} was not found`)
+      } else {
+        res.send('Car update successful!')
+      }
+    } catch (err){
+        console.error(err);
+        res.status(404).send('Patch failed.')
     }
 })
 
-app.delete('/api/cars/:id', async (req, res) =>{
-    const id = req.params.id;
+app.delete('/api/cars/:id', async (req, res)=> {
+    let id = req.params.id
     try {
-    await client.query('DELETE FROM cars WHERE id = $1', [id]);
-    res.send(`Car with ${id} was deleted`);
-    } catch (error){
-        console.error(error);
-        res.status(404).send('Entity not deleted')
+     await client.query('DELETE FROM cars WHERE id = $1', [id]);
+     res.send(`Car with ${id} was deleted.`)
+    } catch (err){
+        console.error(err);
+        res.status(404).send('Delete failed')
     }
 })
-
 
 app.listen(port, (error)=>{
     if (error){
